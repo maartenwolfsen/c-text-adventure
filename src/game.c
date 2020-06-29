@@ -19,6 +19,8 @@
 
 #define CHOICE_START "{"
 #define CHOICE_END "}"
+#define TYPE_START "["
+#define TYPE_END "]"
 #define CHOICE_SEPARATOR ';'
 #define CHOICETYPE_SEPARATOR ':'
 
@@ -74,23 +76,6 @@ void init_choice()
             exit(0);
         }
     }
-}
-
-char * removeSubStr( char *str, const char *substr )
-{
-    size_t m1 = strlen(str);
-    size_t m2 = strlen(substr);
-
-    if (!(m1 < m2))
-    {
-        for (char *p = str; (p = strstr(p, substr)) != NULL; )
-        {
-            size_t n = m1 - ( p + m2 - str );
-            memmove(p, p + m2, n + 1);
-        }
-    }
-
-    return str;
 }
 
 char** str_split(char* a_str, const char a_delim)
@@ -154,17 +139,45 @@ int main()
     int line_size = 1024;
     char buffer[100];
     int nestLevel = 0;
+    int inChoice = 0;
 
     while (fgets(buffer, BUFFER_LENGTH, filePointer)) {
         char *str = buffer + (4 * nestLevel);
+
+        if (inChoice == 1) {
+            if (toupper(*(str + 1)) != choice[0]) {
+                continue;
+            } else {
+                inChoice = 0;
+            }
+        }
 
         if (*str == '#' || (*str != '[' && *str != ' ')) continue;
 
         // Print line
         if (*(str + 1) == 'p') printf("%s", str + 3);
 
+        // Quote line
+        if (*(str + 1) == 'q') {
+            // Separate Choices
+            char *q1, *q2;
+            q1 = strstr(str, TYPE_START) + 1;
+
+            if (q1) {
+                q2 = strstr(q1, TYPE_END);
+
+                char quoteBuffer[128];
+                snprintf(quoteBuffer, sizeof(buffer), "%.*s", q2 - q1, q1);
+
+                char *quote = str + (strlen(quoteBuffer) + 2);
+                strrtn(quote);
+
+                printf("%s: \"%s\"\n", quoteBuffer + 2, quote);
+            }
+        }
+
         // Increase Nest Level
-        if (*(str + 1) == 'c' || *(str + 1) == 'ex' || *(str + 1) == 'a' || *(str + 1) == 'b' || *(str + 1) == 'c') nestLevel++;
+        if (*(str + 1) == 'c' || (*(str + 1) == 'e' && *(str + 2) == 'x') || *(str + 1) == 'a' || *(str + 1) == 'b' || *(str + 1) == 'c') nestLevel++;
 
         // Activate Choice Mode
         if (*(str + 1) == 'c') {
@@ -212,14 +225,20 @@ int main()
                     wait();
 
                     for (int i = 0; i < strlen(choiceTypes); i++) {
-                        if (strcmp(choice, toupper(choiceTypes[i])) == 1) {
+                        if (choice[0] == choiceTypes[i]) {
                             continue;
                         }
 
-                        // get from children
+                        inChoice = 1;
                     }
                 }
             }
+        }
+
+        // Init Endscreen
+        if ((*(str + 1) == 'e' && *(str + 2) == 'n' && *(str + 3) == 'd')) {
+            printf("The End");
+            break;
         }
     }
 
