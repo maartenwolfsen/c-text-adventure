@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<story>
+  <print>  ________            ______                      __         </print>
+  <print> /_  __/ /_  ___     /_  __/________ __   _____  / /__  _____</print>
+  <print>  / / / __ \/ _ \     / / / ___/ __ `/ | / / _ \/ / _ \/ ___/</print>
+  <print> / / / / / /  __/    / / / /  / /_/ /| |/ /  __/ /  __/ /    </print>
+  <print>/_/ /_/ /_/\___/    /_/ /_/   \__,_/ |___/\___/_/\___/_/     </print>
+  <print>                      A Short Story by Maarten Wolfsen</print>
+  <print>---- Main Menu -------------------------------------</print>
+  <choice>
+    <a>
+      <label>Start Game</label>
+      <exec>
+        <quote char="Bartender">Hello weary Traveler. You have been on quite the Journey, what is your name?</quote>
+        <func>setName</func>
+        <quote char="Bartender" values="name">So %s... I have never seen you before...</quote>
+        <quote char="Bartender">Where are you from?</quote>
+        <func>setLocation</func>
+        <quote char="Bartender" values="location">Ah... %s... From afar I see...</quote>
+        <quote char="Bartender" values="name,location">Make yourself at home, %s of %s, ask me if you need anything.</quote>
+        <choice>
+          <a>
+            <label>Grab a drink and sit at the bar.</label>
+            <exec>
+              <print>You order a drink and go sit at the bar.</print>
+              <print>After a short while, a stranger sits right next to you and orders a beer.</print>
+              <print>You notice his hand is torn open and bleeding.</print>
+              <quote char="Bartender">How are you going to pay for that beer, stranger?</quote>
+              <print>It seems that the stranger does not have enough money to pay for the beer.</print>
+              <choice>
+                <a>
+                  <label>Pay for his beer.</label>
+                  <exec>
+                    <quote char="Stranger">Thank you Traveler...</quote>
+                  </exec>
+                </a>
+                <b>
+                  <label>Don't pay for his beer.</label>
+                  <exec>
+                    <func>exit</func>
+                  </exec>
+                </b>
+              </choice>
+            </exec>
+          </a>
+          <b>
+            <label>Grab a drink and sit at a empty table.</label>
+            <exec>
+              <func>exit</func>
+            </exec>
+          </a>
+          <c>
+            <label>Grab a drink and sit at a table beside someone.</label>
+            <exec>
+              <func>exit</func>
+            </exec>
+          </a>
+        </choice>
+      </exec>
+    </a>
+    <b>
+      <label>Exit</label>
+      <exec>
+        <func>exit</func>
+      </exec>
+    </b>
+  </choice>
+</story>
