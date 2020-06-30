@@ -21,8 +21,8 @@
 #define CHOICE_END "}"
 #define TYPE_START "["
 #define TYPE_END "]"
-#define CHOICE_SEPARATOR ';'
-#define CHOICETYPE_SEPARATOR ':'
+#define CHOICE_SEPARATOR ";"
+#define CHOICETYPE_SEPARATOR ":"
 
 char choice[15];
 
@@ -78,63 +78,17 @@ void init_choice()
     }
 }
 
-char** str_split(char* a_str, const char a_delim)
-{
-    char** result    = 0;
-    size_t count     = 0;
-    char* tmp        = a_str;
-    char* last_comma = 0;
-    char delim[2];
-    delim[0] = a_delim;
-    delim[1] = 0;
-
-    /* Count how many elements will be extracted. */
-    while (*tmp)
-    {
-        if (a_delim == *tmp)
-        {
-            count++;
-            last_comma = tmp;
-        }
-        tmp++;
-    }
-
-    /* Add space for trailing token. */
-    count += last_comma < (a_str + strlen(a_str) - 1);
-
-    /* Add space for terminating null string so caller
-       knows where the list of returned strings ends. */
-    count++;
-
-    result = malloc(sizeof(char*) * count);
-
-    if (result)
-    {
-        size_t idx  = 0;
-        char* token = strtok(a_str, delim);
-
-        while (token)
-        {
-            assert(idx < count);
-            *(result + idx++) = strdup(token);
-            token = strtok(0, delim);
-        }
-        assert(idx == count - 1);
-        *(result + idx) = 0;
-    }
-
-    return result;
-}
-
 int main()
 {
     const char *filename = "./src/story.m";
     FILE *filePointer = fopen(filename, "r");
 
     if (!filePointer) {
-        printf("Error!");
+        printf("Game Story could not be loaded.");
         return 0;
     }
+
+    PlaySound(".\\src\\sound\\song.wav", NULL, SND_ASYNC);
 
     int line_size = 1024;
     char buffer[100];
@@ -159,7 +113,6 @@ int main()
 
         // Quote line
         if (*(str + 1) == 'q') {
-            // Separate Choices
             char *q1, *q2;
             q1 = strstr(str, TYPE_START) + 1;
 
@@ -176,11 +129,26 @@ int main()
             }
         }
 
+        // Execute Function
+        if (*(str + 1) == 'f') {
+            char *f1, *f2;
+            f1 = strstr(str, TYPE_START) + 1;
+
+            if (f1) {
+                f2 = strstr(f1, TYPE_END);
+
+                char funcBuffer[128];
+                snprintf(funcBuffer, sizeof(buffer), "%.*s", f2 - f1, f1);
+
+                printf("%s", funcBuffer + 2);
+            }
+        }
+
         // Increase Nest Level
-        if (*(str + 1) == 'c' || (*(str + 1) == 'e' && *(str + 2) == 'x') || *(str + 1) == 'a' || *(str + 1) == 'b' || *(str + 1) == 'c') nestLevel++;
+        if (*(str + 1) == 'z' || (*(str + 1) == 'e' && *(str + 2) == 'x') || *(str + 1) == 'a' || *(str + 1) == 'b' || *(str + 1) == 'c') nestLevel++;
 
         // Activate Choice Mode
-        if (*(str + 1) == 'c') {
+        if (*(str + 1) == 'z') {
             printsep();
             printf("---- What will you do? -----------------------------\n");
 
@@ -195,29 +163,14 @@ int main()
                     char assignmentBuffer[128];
                     char choiceTypes[10];
                     snprintf(assignmentBuffer, sizeof(buffer), "%.*s\n", p2 - p1, p1);
-                    char** choices = str_split(assignmentBuffer, CHOICE_SEPARATOR);
-                    int choice_amount = strlen(choices) / 2;
+                    char* choices = strtok(assignmentBuffer, CHOICE_SEPARATOR);
 
-                    if (choice_amount > 0) {
-                        for (int i = 0; i < choice_amount; i++) {
-                            char* choice = choices[i];
-
-                            if (strcmp(choice, "") == 0 || choice == NULL) {
-                                continue;
-                            }
-
-                            char** choiceParts = str_split(choice, CHOICETYPE_SEPARATOR);
-
-                            if (choiceParts) {
-                                printf("[%c] %s\n", toupper(choiceParts[0][0]), choiceParts[1]);
-                                snprintf(choiceTypes, sizeof(choiceTypes), "%s%c", choiceTypes, choiceParts[0][0]);
-                                free(choiceParts);
-                            }
-                        }
-
-                        free(choices);
+                    while (choices != NULL) {
+                        printf("[%c] %s\n", toupper(choices[0]), choices + 2);
+                        choices = strtok(NULL, CHOICE_SEPARATOR);
                     }
 
+                    free(choices);
                     printsep();
                     init_choice();
                     printf("Choosing %s\n", choice);
@@ -248,8 +201,6 @@ int main()
     char name[MAX_STRING_CHARS];
     char location[MAX_STRING_CHARS];
     char choiceAnswer[50];
-
-    PlaySound(".\\src\\sound\\song.wav", NULL, SND_ASYNC);
 
     // printf(node);
 
