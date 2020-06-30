@@ -38,11 +38,28 @@
                         [q Stranger]Thank you Traveler...
                         [end]
                     [b]
+                        [q Stranger]What a world we live in...
                         [end]
                 
             [b]
+                [p]You sit at an empty table...
+                [p]Nothing happens and after two hours you leave.
                 [end]
             [c]
+                [p]You see a man wearing a high hat sitting at a table.
+                [p]You decide to sit beside him.
+                [q Man with the High Hat]Hello young Traveler, how are you today?
+                    [z {a:I'm fine;b:Meh...}]
+                        [a]
+                            [q Man with the High Hat]Good... Good...
+                            [p]You and the Man with the High Hat finish your drinks.
+                            [p]You decide to go.
+                            [end]
+                        [b]
+                            [p]The Man with the High Hat doesn't really know what to say.
+                            [p]The two of you sit in silence for about five minutes.
+                            [p]You decide to leave.
+                            [end]
                 [end]
     [b]
         [end]
