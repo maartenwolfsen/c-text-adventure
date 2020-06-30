@@ -126,8 +126,7 @@ char *get_str_between(char *str, char *startsym, char *endsym)
 
 int main()
 {
-    const char *filename = "./src/story.m";
-    FILE *filePointer = fopen(filename, "r");
+    FILE *filePointer = fopen("./src/story.m", "r");
 
     if (!filePointer) {
         printf("Game Story could not be loaded.");
