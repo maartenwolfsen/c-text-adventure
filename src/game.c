@@ -124,7 +124,7 @@ char *get_str_between(char *str, char *startsym, char *endsym)
 
 int main()
 {
-    FILE *filePointer = fopen("./src/story.m", "r");
+    FILE *filePointer = fopen("./src/script.tee", "r");
 
     if (!filePointer) {
         printf("Game Story could not be loaded.");
