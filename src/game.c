@@ -11,6 +11,7 @@
 
 #pragma comment(lib, "winmm.lib")
 
+#define MAX_SOURCE_SIZE (0x100000)
 #define BUFFER_LENGTH 1024
 #define MAX_STRING_CHARS 20
 #define CHOICE_MAX_ATTEMPTS 10
@@ -91,6 +92,22 @@ void init_end_screen()
     printf("\n");
 }
 
+// Replace words in a string
+char *replace_str(char *str, char *orig, char *rep)
+{
+  static char buffer[4096];
+  char *p;
+
+  if (!(p = strstr(str, orig))) return str;
+
+  strncpy(buffer, str, p - str);
+  buffer[p - str] = '\0';
+
+  sprintf(buffer + (p - str), "%s%s", rep, p + strlen(orig));
+
+  return buffer;
+}
+
 int main()
 {
     const char *filename = "./src/story.m";
@@ -113,6 +130,8 @@ int main()
     while (fgets(buffer, BUFFER_LENGTH, filePointer)) {
         char *str = buffer + (4 * nestLevel);
 
+        if (*str == '#' || (*str != '[' && *str != ' ')) continue;
+
         if (inChoice == 1) {
             if (toupper(*(str + 1)) != choice[0]) {
                 continue;
@@ -120,8 +139,9 @@ int main()
                 inChoice = 0;
             }
         }
-
-        if (*str == '#' || (*str != '[' && *str != ' ')) continue;
+        
+        str = replace_str(str, "$name", name);
+        str = replace_str(str, "$location", location);
 
         // Print line
         if (*(str + 1) == 'p') printf("%s", str + 3);

@@ -3,8 +3,12 @@
 # [z {choices}] = choice;
 #   Example: [c {a:Label 1;b:Label 2;c:Label 3}]
 # [a] = choice type
-# [q quotee] = quote;
+# [q quotee] = quote
 #   Output: "Quotee": q
+# [f function] = function
+# $varname = variable
+#   Example: This is a string from $name
+#   Variable name must be set via set function
 
 [p]  ________            ______                      __         
 [p] /_  __/ /_  ___     /_  __/________ __   _____  / /__  _____
@@ -17,11 +21,11 @@
     [a]
         [q Bartender]Hello weary Traveler. You have been on quite the Journey, what is your name?
         [f setName]
-        [q Bartender]So Traveler... I have never seen you before...
+        [q Bartender]So $name... I have never seen you before...
         [q Bartender]Where are you from?
         [f setLocation]
-        [q Bartender]Ah... From afar I see...
-        [q Bartender]Make yourself at home, ask me if you need anything.
+        [q Bartender]Ah... $location... From afar I see...
+        [q Bartender]Make yourself at home, $name of $location, ask me if you need anything.
         [z {a:Grab a drink and sit at the bar.;b:Grab a drink and sit at a empty table.;c:Grab a drink and sit at a table beside someone.}]
             [a]
                 [p]You order a drink and go sit at the bar.
