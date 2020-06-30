@@ -77,6 +77,20 @@ void init_choice()
     }
 }
 
+// Initialize End Screen
+void init_end_screen()
+{
+    printf("\n");
+    printsep();
+    printf("Thank you for playing!\n");
+    printf("---- CREDITS -----------------------------\n");
+    printf("Story: Maarten Wolfsen\n");
+    printf("Programming: Maarten Wolfsen\n");
+    printf("Music: 8 Bit Presentation (Free music for non-commercial use from https://www.fesliyanstudios.com)\n");
+    printsep();
+    printf("\n");
+}
+
 int main()
 {
     const char *filename = "./src/story.m";
@@ -87,7 +101,7 @@ int main()
         return 0;
     }
 
-    //PlaySound(".\\src\\sound\\song.wav", NULL, SND_ASYNC);
+    PlaySound(".\\src\\sound\\bg_track.wav", NULL, SND_LOOP | SND_ASYNC);
 
     int line_size = 1024;
     int nestLevel = 0;
@@ -202,7 +216,7 @@ int main()
 
         // Init Endscreen
         if ((*(str + 1) == 'e' && *(str + 2) == 'n' && *(str + 3) == 'd')) {
-            printf("The End");
+            init_end_screen();
             break;
         }
     }
