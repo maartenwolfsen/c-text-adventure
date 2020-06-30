@@ -186,7 +186,6 @@ int main()
         // Activate Choice Mode
         if (*(str + 1) == 'z') {
             printsep();
-            printf("---- What will you do? -----------------------------\n");
 
             // Separate Choices            
             char *assignmentBuffer = get_str_between(str, CHOICE_START, CHOICE_END);
