@@ -136,7 +136,6 @@ int main()
 
     PlaySound(".\\src\\sound\\bg_track.wav", NULL, SND_LOOP | SND_ASYNC);
 
-    int line_size = 1024;
     int nestLevel = 0;
     char buffer[BUFFER_LENGTH];
     char name[MAX_STRING_CHARS];
