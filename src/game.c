@@ -108,6 +108,22 @@ char *replace_str(char *str, char *orig, char *rep)
   return buffer;
 }
 
+// Get string between symbols
+char *get_str_between(char *str, char *startsym, char *endsym)
+{
+    char buffer[BUFFER_LENGTH];
+    char *p1, *p2;
+
+    p1 = strstr(str, startsym) + 1;
+
+    if (p1) {
+        p2 = strstr(p1, endsym);
+        snprintf(buffer, sizeof(buffer), "%.*s", p2 - p1, p1);
+    }
+
+    return buffer;
+}
+
 int main()
 {
     const char *filename = "./src/story.m";
@@ -148,45 +164,26 @@ int main()
 
         // Quote line
         if (*(str + 1) == 'q') {
-            char *q1, *q2;
-            q1 = strstr(str, TYPE_START) + 1;
+            char *quoteBuffer = get_str_between(str, TYPE_START, TYPE_END);
+            char *quote = str + (strlen(quoteBuffer) + 2);
 
-            if (q1) {
-                q2 = strstr(q1, TYPE_END);
-
-                char quoteBuffer[128];
-                snprintf(quoteBuffer, sizeof(buffer), "%.*s", q2 - q1, q1);
-
-                char *quote = str + (strlen(quoteBuffer) + 2);
-                strrtn(quote);
-
-                printnpcc(quoteBuffer + 2, quote);
-            }
+            strrtn(quote);
+            printnpcc(quoteBuffer + 2, quote);
         }
 
         // Execute Function
         // TODO: Find better function execution method
         if (*(str + 1) == 'f') {
-            char *f1, *f2;
-            f1 = strstr(str, TYPE_START) + 1;
+            char *function = get_str_between(str, TYPE_START, TYPE_END) + 2;
 
-            if (f1) {
-                f2 = strstr(f1, TYPE_END);
-
-                char funcBuffer[128];
-                snprintf(funcBuffer, sizeof(buffer), "%.*s", f2 - f1, f1);
-
-                char *function = funcBuffer + 2;
-
-                if (strcmp(function, "setName") == 0) {
-                    fgets(name, MAX_STRING_CHARS, stdin);
-                    strrtn(name);
-                    printnpcc(name, name);
-                } else if (strcmp(function, "setLocation") == 0) {
-                    fgets(location, MAX_STRING_CHARS, stdin);
-                    strrtn(location);
-                    printnpcc(location, location);
-                }
+            if (strcmp(function, "setName") == 0) {
+                fgets(name, MAX_STRING_CHARS, stdin);
+                strrtn(name);
+                printnpcc(name, name);
+            } else if (strcmp(function, "setLocation") == 0) {
+                fgets(location, MAX_STRING_CHARS, stdin);
+                strrtn(location);
+                printnpcc(location, location);
             }
         }
 
@@ -198,39 +195,29 @@ int main()
             printsep();
             printf("---- What will you do? -----------------------------\n");
 
-            // Separate Choices
-            char *p1, *p2;
-            p1 = strstr(str, CHOICE_START) + 1;
+            // Separate Choices            
+            char *assignmentBuffer = get_str_between(str, CHOICE_START, CHOICE_END);
+            char *choices = strtok(assignmentBuffer, CHOICE_SEPARATOR);
+            char choiceTypes[10];
 
-            if (p1) {
-                p2 = strstr(p1, CHOICE_END);
+            while (choices != NULL) {
+                printf("[%c] %s\n", toupper(choices[0]), choices + 2);
+                choices = strtok(NULL, CHOICE_SEPARATOR);
+            }
 
-                if (p2) {
-                    char assignmentBuffer[128];
-                    char choiceTypes[10];
-                    snprintf(assignmentBuffer, sizeof(buffer), "%.*s\n", p2 - p1, p1);
-                    char *choices = strtok(assignmentBuffer, CHOICE_SEPARATOR);
+            free(choices);
+            printsep();
+            init_choice();
+            printf("Choosing %s\n", choice);
+            printsep();
+            wait();
 
-                    while (choices != NULL) {
-                        printf("[%c] %s\n", toupper(choices[0]), choices + 2);
-                        choices = strtok(NULL, CHOICE_SEPARATOR);
-                    }
-
-                    free(choices);
-                    printsep();
-                    init_choice();
-                    printf("Choosing %s\n", choice);
-                    printsep();
-                    wait();
-
-                    for (int i = 0; i < strlen(choiceTypes); i++) {
-                        if (choice[0] == choiceTypes[i]) {
-                            continue;
-                        }
-
-                        inChoice = 1;
-                    }
+            for (int i = 0; i < strlen(choiceTypes); i++) {
+                if (choice[0] == choiceTypes[i]) {
+                    continue;
                 }
+
+                inChoice = 1;
             }
         }
 
