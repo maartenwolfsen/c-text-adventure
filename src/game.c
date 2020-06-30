@@ -138,7 +138,6 @@ int main()
 
     int line_size = 1024;
     int nestLevel = 0;
-    int inChoice = 0;
     char buffer[BUFFER_LENGTH];
     char name[MAX_STRING_CHARS];
     char location[MAX_STRING_CHARS];
@@ -147,14 +146,6 @@ int main()
         char *str = buffer + (4 * nestLevel);
 
         if (*str == '#' || (*str != '[' && *str != ' ')) continue;
-
-        if (inChoice == 1) {
-            if (toupper(*(str + 1)) != choice[0]) {
-                continue;
-            } else {
-                inChoice = 0;
-            }
-        }
         
         str = replace_str(str, "$name", name);
         str = replace_str(str, "$location", location);
@@ -216,8 +207,6 @@ int main()
                 if (choice[0] == choiceTypes[i]) {
                     continue;
                 }
-
-                inChoice = 1;
             }
         }
 
