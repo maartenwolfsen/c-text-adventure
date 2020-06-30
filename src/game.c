@@ -137,11 +137,18 @@ int main()
     char buffer[BUFFER_LENGTH];
     char name[MAX_STRING_CHARS];
     char location[MAX_STRING_CHARS];
+    int choiceMode = 0;
 
     while (fgets(buffer, BUFFER_LENGTH, filePointer)) {
         char *str = buffer + (4 * nestLevel);
 
         if (*str == '#' || (*str != '[' && *str != ' ')) continue;
+
+        if (choiceMode == 1 && *(str + 1) != tolower(choice[0])) {
+            continue;
+        } else {
+            choiceMode = 0;
+        }
         
         str = replace_str(str, "$name", name);
         str = replace_str(str, "$location", location);
@@ -159,7 +166,6 @@ int main()
         }
 
         // Execute Function
-        // TODO: Find better function execution method
         if (*(str + 1) == 'f') {
             char *function = get_str_between(str, TYPE_START, TYPE_END) + 2;
 
@@ -170,7 +176,7 @@ int main()
             } else if (strcmp(function, "setLocation") == 0) {
                 fgets(location, MAX_STRING_CHARS, stdin);
                 strrtn(location);
-                printnpcc(location, location);
+                printnpcc(name, location);
             }
         }
 
@@ -199,11 +205,7 @@ int main()
             printsep();
             wait();
 
-            for (int i = 0; i < strlen(choiceTypes); i++) {
-                if (choice[0] == choiceTypes[i]) {
-                    continue;
-                }
-            }
+            choiceMode = 1;
         }
 
         // Init Endscreen
