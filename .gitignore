@@ -360,5 +360,5 @@ MigrationBackup/
 FodyWeavers.xsd
 
 .vscode
-dist/*
 src/script.tee
+*.exe
