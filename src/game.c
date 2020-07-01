@@ -215,4 +215,6 @@ int main()
     }
 
     fclose(filePointer);
+    
+    return 0;
 }
