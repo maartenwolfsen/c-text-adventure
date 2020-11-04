@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 #ifdef _WIN32
 #include <windows.h>
@@ -125,7 +126,7 @@ char *get_str_between(char *str, char *startsym, char *endsym)
 
 int main()
 {
-    FILE *filePointer = fopen("../src/script.tee", "r");
+    FILE *filePointer = fopen("script/script.tee", "r");
 
     if (!filePointer) {
         printf("Game Story could not be loaded.");
