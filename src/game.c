@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #ifdef _WIN32
 #include <windows.h>
@@ -93,17 +94,17 @@ void init_end_screen()
 // Replace words in a string
 char *replace_str(char *str, char *orig, char *rep)
 {
-  static char buffer[4096];
-  char *p;
+    static char buffer[4096];
+    char *p;
 
-  if (!(p = strstr(str, orig))) return str;
+    if (!(p = strstr(str, orig))) return str;
 
-  strncpy(buffer, str, p - str);
-  buffer[p - str] = '\0';
+    strncpy(buffer, str, p - str);
+    buffer[p - str] = '\0';
 
-  sprintf(buffer + (p - str), "%s%s", rep, p + strlen(orig));
+    sprintf(buffer + (p - str), "%s%s", rep, p + strlen(orig));
 
-  return buffer;
+    return buffer;
 }
 
 // Get string between symbols
@@ -124,14 +125,16 @@ char *get_str_between(char *str, char *startsym, char *endsym)
 
 int main()
 {
-    FILE *filePointer = fopen("./src/script.tee", "r");
+    FILE *filePointer = fopen("../src/script.tee", "r");
 
     if (!filePointer) {
         printf("Game Story could not be loaded.");
         return 0;
     }
 
-    PlaySound(".\\src\\sound\\bg_track.wav", NULL, SND_LOOP | SND_ASYNC);
+    #ifdef _WIN32
+        PlaySound(".\\src\\sound\\bg_track.wav", NULL);
+    #endif
 
     int nestLevel = 0;
     char buffer[BUFFER_LENGTH];

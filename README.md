@@ -9,3 +9,6 @@ A Text Adventure Engine, with an example script called "The Traveler", made in C
 
 ## Script standard
 See the example script file (`src/script.tee.example`) for the script standards.
+
+## Todo
+- Play sound on Linux

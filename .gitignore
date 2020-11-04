@@ -362,3 +362,4 @@ FodyWeavers.xsd
 .vscode
 src/script.tee
 *.exe
+build/*
